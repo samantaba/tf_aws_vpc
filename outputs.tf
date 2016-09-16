@@ -11,7 +11,7 @@ output "vpc_id" {
 }
 
 output "internet_gateway" {
-  value = "${aws_internet_gateway.mod}" 
+  value = "${aws_internet_gateway.mod.id}" 
 }
 
 output "public_route_table_id" {
