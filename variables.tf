@@ -12,6 +12,11 @@ variable "private_subnets" {
   default     = []
 }
 
+variable "private_nat_subnets" {
+  description = "A list of private subnets inside the VPC."
+  default     = []
+}
+
 variable "azs" {
   description = "A list of Availability zones in the region"
   default     = []

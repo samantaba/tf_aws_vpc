@@ -38,6 +38,15 @@ resource "aws_route_table" "private" {
   }
 }
 
+resource "aws_route_table" "private-nat" {
+  vpc_id           = "${aws_vpc.mod.id}"
+  propagating_vgws = ["${var.private_propagating_vgws}"]
+
+  tags {
+    Name = "${var.name}-private"
+  }
+}
+
 resource "aws_subnet" "private" {
   vpc_id            = "${aws_vpc.mod.id}"
   cidr_block        = "${var.private_subnets[count.index]}"
@@ -46,6 +55,17 @@ resource "aws_subnet" "private" {
 
   tags {
     Name = "${var.name}-private"
+  }
+}
+
+resource "aws_subnet" "private-nat" {
+  vpc_id            = "${aws_vpc.mod.id}"
+  cidr_block        = "${var.private_nat_subnets[count.index]}"
+  availability_zone = "${var.azs[count.index]}"
+  count             = "${length(var.private_nat_subnets)}"
+
+  tags {
+    Name = "${var.name}-private-nat"
   }
 }
 
@@ -66,6 +86,12 @@ resource "aws_route_table_association" "private" {
   count          = "${length(var.private_subnets)}"
   subnet_id      = "${element(aws_subnet.private.*.id, count.index)}"
   route_table_id = "${aws_route_table.private.id}"
+}
+
+resource "aws_route_table_association" "private-nat" {
+  count          = "${length(var.private_subnets)}"
+  subnet_id      = "${element(aws_subnet.private-nat.*.id, count.index)}"
+  route_table_id = "${aws_route_table.private-nat.id}"
 }
 
 resource "aws_route_table_association" "public" {
