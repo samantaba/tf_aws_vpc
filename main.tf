@@ -41,7 +41,7 @@ resource "aws_route_table" "private" {
 resource "aws_route_table" "private-nat" {
   vpc_id           = "${aws_vpc.mod.id}"
   propagating_vgws = ["${var.private_propagating_vgws}"]
-#  nat_gateway_id   =  "${aws_eip.nat_eip.0.id}"
+  nat_gateway_id   =  "${aws_eip.nat_eip.0.id}"
 
   tags {
     Name = "${var.name}-private"
